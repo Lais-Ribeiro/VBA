@@ -1,0 +1,136 @@
+Sub INT_TRANSPOR()
+    'Desativa a atualização de tela
+    Application.ScreenUpdating = False
+    
+    'Transforma a linha em coluna
+    Columns("A:A").Select
+    Selection.TextToColumns Destination:=Range("A1"), DataType:=xlDelimited, _
+        TextQualifier:=xlDoubleQuote, ConsecutiveDelimiter:=True, Tab:=True, _
+        Semicolon:=True, Comma:=True, Space:=True, Other:=False, FieldInfo:= _
+        Array(Array(1, 1), Array(2, 1), Array(3, 1), Array(4, 1), Array(5, 1), Array(6, 1)), _
+        TrailingMinusNumbers:=True
+    
+    'Define as variaveis
+    Dim ultiCel, linha, clinha As Integer
+    
+    'Define a última linha da tabela
+    ultiCel = Cells(Rows.Count, 1).End(xlUp).Row
+
+    'Seleciona a planilha INT
+    Sheets("INT").Select
+    
+    'Para cada linha desta planilha vai realizar o loop e copiar a linha
+    For linha = 2 To ultiCel
+            Sheets("INT").Select
+            Range(Cells(linha, 1), Cells(linha, 7)).Copy
+            Call Transpor 'a macro Transpoe
+    Next linha
+         linha = linha + 1
+
+     'Formata as linhas que interressam para numero
+    Range("A2").Select
+    Range(Selection, Selection.End(xlDown)).Select
+    Selection.NumberFormat = "0"
+    
+    'Seleciona somente as linhas que interressam
+    Range("A2").Select
+    Range(Selection, Selection.End(xlDown)).Copy
+    
+End Sub
+
+Sub Transpor()
+'
+' Macro para transpor as linhas
+'
+    'Desativa a atualização de tela
+    Application.ScreenUpdating = False
+    
+    'Define as variaveis
+    Dim ultimacelula, linha As Integer
+            
+    'Seleciona a planilha Transpor
+    Sheets("TRANSPOR").Select
+    
+    'Define qual a ultima linha da tabela
+     ultimacelula = Range("A1").End(xlDown).Row + 1
+    
+    'Define que vai começar pela 1 linha
+    linha = 1
+        
+        'Faz o loop enquanto a linha for maior ou igual a quantidade de linhas da tabela
+        Do While linha <= ultimacelula
+                 'Se a linha for igual a vazia ele irá colcar o que estava copiado na macro de origem e saira do loop e voltar para macro de origem
+                 If Range("A" & linha) = "" Then
+                        Range("A" & linha).Select
+                        Selection.PasteSpecial Paste:=xlPasteAll, Operation:=xlNone, SkipBlanks:=False, Transpose:=True
+                    Exit Do
+                'Se a celular estiver preenchida ele vai acrecentando 1 até localizar uma celula vaiza
+                Else
+                        linha = linha + 1
+                        ultimacelula = ultimacelula + Range("A1").End(xlDown).Row + 1
+                    End If
+        Loop
+
+    Call Funcao_Retira_letras
+    
+End Sub
+
+Sub Delete()
+'
+'
+    'Desativa a atualização de tela
+    Application.ScreenUpdating = False
+    
+    'Seleciona a coluna Transpor
+    Sheets("TRANSPOR").Select
+    'Limpa todas as celulas
+    Cells.Clear
+    'Escreve o titular na primeira linha/coluna
+    Range("A1") = "ALVO"
+
+    'Seleciona a coluna INT
+    Sheets("INT").Select
+    'Limpa todas as celulas
+    Cells.Clear
+    'Escreve o titular na primeira linha/coluna
+    Range("A1") = "ALVO"
+    'Seleciona a primeira linha/coluna
+    Range("A1").Select
+
+    
+End Sub
+'Esta função tem por objetivo retirar números de células que contenham conteúdos mistos de números e texto
+'sem a possibilidade de serem colunados
+Public Function lfRetiraNumeros(ByVal vValor As String) As String
+    'Atualiza o cálculo automaticamente
+    Application.Volatile
+    
+    'Conta a quantidade de caracteres
+    Dim vQtdeCaract As Long
+    Dim vControle   As Boolean
+    
+    vQtdeCaract = Len(vValor)
+    vControle = False
+    
+    'Para cada caractere identifica se é número ou texto
+    For i = 1 To vQtdeCaract
+        'Se for número adiciona no retorno da função
+        If IsNumeric(Mid(vValor, i, 1)) Then
+            vControle = False
+            lfRetiraNumeros = lfRetiraNumeros & Mid(vValor, i, 1)
+        Else
+            vControle = True
+        End If
+    Next
+End Function
+
+Sub Funcao_Retira_letras()
+
+    ultiCel = Cells(Rows.Count, 1).End(xlUp).Row
+        
+    For linha = 2 To ultiCel
+            Cells(linha, 1).Value = lfRetiraNumeros(Cells(linha, 1))
+    Next linha
+    linha = linha + 1
+
+End Sub
