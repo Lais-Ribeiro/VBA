@@ -1,0 +1,57 @@
+Sub IF_01()
+
+'Define as vaiavéis
+Dim vrUltima_linha, vrLinha, vrNota, vrLinhaAprovado, vrLinhaReprovado     As Integer
+
+'Verfica qual a ultima linha da coluna
+vrUltima_linha = Cells(Rows.Count, 1).End(xlUp).Row
+
+'Atribui valores as variavés
+vrLinhaAprovado = 2
+vrLinhaReprovado = 2
+
+'Limpa as planilhas
+Sheets("Aprovado").Cells.Clear
+Sheets("Reprovado").Cells.Clear
+
+'Coloca o cabelho nas planilhas
+'Planilha Aprovado
+Sheets("Aprovado").Range("A1") = "ALUNO"
+Sheets("Aprovado").Range("B1") = "MÉDIA"
+Sheets("Aprovado").Range("C1") = "STATUS"
+
+'Planilha Reprovado
+Sheets("Reprovado").Range("A1") = "ALUNO"
+Sheets("Reprovado").Range("B1") = "MÉDIA"
+Sheets("Reprovado").Range("C1") = "STATUS"
+
+'Para cada linha, comeacando da segunda até a ultima linha da planila
+For vrLinha = 2 To vrUltima_linha
+    vrNota = Cells(vrLinha, 2).Value
+    'Se o valor da nota que está na primeira planilha for maior ou igual a 7 ele entrara nesta estrura
+    If vrNota >= 7 Then
+        Range("C" & vrLinha) = "Aprovado"
+        Range(Cells(vrLinha, 1), Cells(vrLinha, 3)).Interior.ColorIndex = 4
+        'Este codigo pega as informaões da primeira primeira planilha e cola na planilha aprovado
+        With Sheets("Aprovado")
+          .Cells(vrLinhaAprovado, 1) = Cells(vrLinha, 1)
+          .Cells(vrLinhaAprovado, 2) = Cells(vrLinha, 2)
+          .Cells(vrLinhaAprovado, 3) = Cells(vrLinha, 3)
+        End With
+    vrLinhaAprovado = vrLinhaAprovado + 1
+    Else
+        Range("C" & vrLinha) = "Reprovado"
+        Range(Cells(vrLinha, 1), Cells(vrLinha, 3)).Interior.ColorIndex = 3
+        'Este codigo pega as informaões da primeira primeira planilha e cola na planilha Reprovado
+        With Sheets("Reprovado")
+          .Cells(vrLinhaReprovado, 1) = Cells(vrLinha, 1)
+          .Cells(vrLinhaReprovado, 2) = Cells(vrLinha, 2)
+          .Cells(vrLinhaReprovado, 3) = Cells(vrLinha, 3)
+        End With
+    vrLinhaReprovado = vrLinhaReprovado + 1
+    End If
+Next vrLinha
+
+Columns.AutoFit
+
+End Sub
