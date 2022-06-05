@@ -1,0 +1,27 @@
+Sub cores()
+'Desativa a atualização de tela
+Application.ScreenUpdating = False
+
+'Define as variavéis
+Dim cor, linha As Byte
+
+'Atribui o valor as variavéis
+cor = 0
+linha = 2
+
+'Enquanto a cor não for 57 ele  executara o loop que colocar o numero da cor na coluna "A" e pinta o interior da celula "B"
+'conforme a tabela de color index
+Do Until cor = 57
+    Cells(linha, 1) = cor
+    Cells(linha, 2).Interior.ColorIndex = cor
+    linha = linha + 1
+    cor = cor + 1
+Loop
+
+End Sub
+
+Sub Cores_Limpar()
+
+    Range("A2:B58").Clear
+    
+End Sub
