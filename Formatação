@@ -1,0 +1,43 @@
+Sub Formatar()
+
+'Desativa a atualização da tela
+Application.ScreenUpdating = False
+
+'Seleciona a Planilha
+Sheets("Mãos_a_Obra_4.5.6.7.8_1").Select
+
+With Range("A1:C1")
+    .Merge
+    .HorizontalAlignment = xlCenter
+    .Font.Name = "BookAntiqua"
+    .Font.Underline = True
+    .Font.ColorIndex = 3
+End With
+
+With Range("A3:C3")
+    .HorizontalAlignment = xlCenter
+    .Font.Name = "BookAntiqua"
+    .Font.Bold = True
+    .Interior.ColorIndex = 8
+End With
+
+With Range("A4:C8")
+    .HorizontalAlignment = xlCenter
+    .Font.Name = "BookAntiqua"
+    .Font.Italic = True
+End With
+
+With Range("A3:C8")
+    .Borders.LineStyle = xlContinuous
+End With
+
+End Sub
+
+Sub Limpar_Formatacao()
+
+'Seleciona a planilha e limpa somente os formatos
+
+    Sheets("Mãos_a_Obra_4.5.6.7.8_1").Select
+    Cells.ClearFormats
+    
+End Sub
