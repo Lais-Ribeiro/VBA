@@ -1,0 +1,46 @@
+Sub Tabuada()
+
+'Desativa a atualização de tela
+Application.ScreenUpdating = False
+
+'Declara as variavéis
+Dim numero, multi, linha, resultado As Integer
+
+'Pede para o usuario o numero da tabuada
+numero = InputBox("Qual o número que deseja ver a tabuada?")
+
+'Seleciona a planilha e limpa o conteudo
+Sheets("Mãos_a_Obra_11.12.13").Select
+Cells.Clear
+
+'Formata das celulas fixas
+With Range("B2")
+    .Value = "Número"
+    .Font.Bold = True
+    .HorizontalAlignment = xlCenter
+End With
+Range("C2").HorizontalAlignment = xlCenter
+
+'Define o valor que vai começar a linha e atribui o valor a variavél numero e coloca o valor na celula C2
+linha = 5
+Range("C2") = numero
+
+For multi = 0 To 10
+
+    resultado = numero * multi
+    Cells(linha, 4) = numero & " x " & multi & " = " & resultado
+
+    If Cells(linha, 4).Row Mod 2 = 0 Then
+        Cells(linha, 4).Interior.ColorIndex = 4
+    End If
+    
+    linha = linha + 1
+Next multi
+
+'Formata as celulas da tabuada
+With Range("D5:D15")
+    .HorizontalAlignment = xlCenter
+    .Columns.AutoFit
+End With
+
+End Sub
